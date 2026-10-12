@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akki Ai - System Onboarding</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: #050505;
+  color: #fff;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ── Starfield Background ── */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.stars::before, .stars::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    120px 80px #fff, 340px 200px rgba(255,255,255,0.5), 560px 120px rgba(255,255,255,0.3),
+    780px 300px #fff, 200px 450px rgba(255,255,255,0.4), 500px 600px rgba(255,255,255,0.2),
+    700px 750px #fff, 900px 180px rgba(255,255,255,0.3), 150px 650px #fff,
+    400px 350px rgba(255,255,255,0.5), 850px 500px #fff, 300px 100px rgba(255,255,255,0.2),
+    600px 400px #fff, 950px 650px rgba(255,255,255,0.3), 100px 300px #fff;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+.stars::after {
+  width: 1px;
+  height: 1px;
+  box-shadow:
+    250px 150px rgba(255,255,255,0.4), 480px 280px #fff, 620px 520px rgba(255,255,255,0.2),
+    820px 680px #fff, 350px 500px rgba(255,255,255,0.3), 550px 180px #fff,
+    750px 350px rgba(255,255,255,0.4), 920px 100px #fff, 180px 720px rgba(255,255,255,0.2),
+    520px 80px #fff, 880px 450px rgba(255,255,255,0.3), 420px 620px #fff,
+    680px 420px rgba(255,255,255,0.2);
+  animation: twinkle 6s ease-in-out infinite alternate-reverse;
+}
+@keyframes twinkle {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* ── Ambient Neon Glow ── */
+.glow-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 700px 500px at 50% 40%, rgba(226,19,110,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 400px at 30% 60%, rgba(0,255,157,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 400px 400px at 70% 30%, rgba(226,19,110,0.03) 0%, transparent 50%);
+}
+
+/* ── HUD Layout ── */
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  padding: 0 32px;
+}
+.hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.hud-top-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+.hud-top-left .back-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s;
+}
+.hud-top-left .back-btn:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+}
+.hud-top-left .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #E2136E;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hud-top-left .sys-name {
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+}
+.hud-top-right {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #E2136E;
+}
+.hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.15);
+  text-transform: uppercase;
+}
+
+/* ── Main Content ── */
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.step { display: none; }
+.step.active { display: block; }
+
+/* ── Step Labels ── */
+.step-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 24px;
+}
+
+/* ── Headings ── */
+.step-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.step-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+/* ── Input ── */
+.sci-input-wrap {
+  margin-bottom: 36px;
+}
+.sci-input {
+  width: 100%;
+  max-width: 320px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #E2136E;
+  padding: 14px 0 10px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.sci-input::placeholder {
+  color: rgba(255,255,255,0.12);
+  font-weight: 400;
+  font-size: 20px;
+}
+.sci-input:focus {
+  border-bottom-color: #00FF9D;
+}
+
+/* ── Buttons ── */
+.btn-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #050505;
+  border: none;
+  padding: 14px 36px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-white:hover {
+  background: #e8e8e8;
+  transform: translateY(-1px);
+}
+.btn-white:active {
+  transform: translateY(0);
+}
+.btn-white:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  color: #1a1a1a;
+  border: none;
+  padding: 14px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-google:hover {
+  background: #e8e8e8;
+  transform: translateY(-1px);
+}
+.btn-google:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Step 3: Status Bar ── */
+.status-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  margin-bottom: 36px;
+  border: 1px solid rgba(226,19,110,0.3);
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  background: rgba(226,19,110,0.04);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.5);
+}
+.status-bar .status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #00FF9D;
+}
+.status-bar .status-text {
+  color: rgba(0,255,157,0.7);
+  font-weight: 600;
+}
+
+/* ── Auth user info ── */
+.auth-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 24px;
+  border-radius: 8px;
+  justify-content: center;
+}
+.auth-user .avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #1a1a1a;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #888;
+  overflow: hidden;
+}
+.auth-user .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.auth-user .name { font-size: 13px; font-weight: 500; }
+.auth-user .email { font-size: 11px; color: #666; }
+
+
+
+
+/* ── Waiting / Approved ── */
+.waiting-icon {
+  width: 60px; height: 60px; margin: 0 auto 20px;
+  background: rgba(226,19,110,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(226,19,110,0.2);
+}
+.waiting-icon .spinner {
+  width: 24px; height: 24px;
+  border: 3px solid rgba(226,19,110,0.1);
+  border-top-color: #E2136E;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.waiting-info {
+  margin-top: 20px;
+  padding: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+}
+.waiting-info .row {
+  display: flex; justify-content: space-between;
+  padding: 6px 0; font-size: 12px;
+}
+.waiting-info .row .label { color: rgba(255,255,255,0.3); }
+.waiting-info .row .value { color: #fff; }
+
+.approved-icon {
+  width: 60px; height: 60px; margin: 0 auto 20px;
+  background: linear-gradient(135deg, #00FF9D, #00CC7A);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: bold;
+  box-shadow: 0 0 40px rgba(0,255,157,0.15);
+}
+
+.tiny-text {
+  font-size: 11px;
+  color: rgba(255,255,255,0.15);
+  margin-top: 16px;
+}
+
+.error-msg {
+  background: rgba(226,19,110,0.08);
+  border: 1px solid rgba(226,19,110,0.2);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #E2136E;
+  margin-bottom: 16px;
+  display: none;
+}
+.error-msg.visible { display: block; }
+
+
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="glow-bg"></div>
+
+<!-- ── HUD Frame ── -->
+<div class="hud">
+  <div class="hud-top">
+    <div class="hud-top-left">
+      <button class="back-btn" id="backBtn" onclick="handleBack()">← BACK</button>
+      <span class="dot"></span>
+      <span class="sys-name">AKKI COGNITIVE SYSTEM</span>
+    </div>
+    <div class="hud-top-right" id="stageCounter">STAGE 1/3</div>
+  </div>
+  <div class="hud-bottom">
+    <span>© 2026 AKKI • SYSTEM</span>
+    <span>SECURITY ENCRYPTED ROUTE</span>
+  </div>
+</div>
+
+<!-- ── Content ── -->
+<div class="content">
+
+  <!-- ═══ STEP 1: Name ═══ -->
+  <div class="step active" id="step1">
+    <div class="step-label">Stage 1 of 4</div>
+    <div class="step-title">Personalize Akki</div>
+    <div class="step-sub">What name should your voice assistant and agents use when speaking to you?</div>
+    <div class="sci-input-wrap">
+      <input class="sci-input" id="inputName" type="text" placeholder="Your name" maxlength="30" autofocus>
+    </div>
+    <div class="error-msg" id="error-step1"></div>
+    <button class="btn-white" id="btnStep1" onclick="handleStep1()">CONTINUE SETUP →</button>
+  </div>
+
+  <!-- ═══ STEP 2: Age ═══ -->
+  <div class="step" id="step2">
+    <div class="step-label">Stage 2 of 4</div>
+    <div class="step-title">Enter Your Age</div>
+    <div class="step-sub">How old are you? Akki uses this to customize workspace insights and report parameters.</div>
+    <div class="sci-input-wrap">
+      <input class="sci-input" id="inputAge" type="number" placeholder="25" min="1" max="150">
+    </div>
+    <div class="error-msg" id="error-step2"></div>
+    <button class="btn-white" id="btnStep2" onclick="handleStep2()">CONFIRM AGE →</button>
+  </div>
+
+  <!-- ═══ STEP 3: Google Sign-In ═══ -->
+  <div class="step" id="step3">
+    <div class="step-label">Stage 3 of 4</div>
+    <div class="step-title">Welcome to the Experience</div>
+    <div class="step-sub">Your technical sci-fi companion is verified and ready for activation.</div>
+    <div class="status-bar">
+      <span class="status-dot"></span>
+      <span class="status-text">VERIFIED BUILD</span>
+      <span style="color:rgba(255,255,255,0.2)">•</span>
+      NO ERRORS DETECTED
+    </div>
+    <div class="error-msg" id="error-step3"></div>
+    <button class="btn-google" id="btnGoogle" onclick="handleStep3()">
+      <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.52-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.54 28.59A14.5 14.5 0 019.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 000 24c0 3.77.87 7.35 2.56 10.56l7.98-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+      CONTINUE WITH GOOGLE
+    </button>
+  </div>
+
+
+  <!-- Step 4: Device Authorization & Review -->
+
+  <!-- WAITING HUD -->
+  <div class="step" id="stepWaiting">
+    <div class="waiting-icon"><div class="spinner"></div></div>
+    <div class="step-title" style="font-size:22px">Awaiting Authorization</div>
+    <div class="step-sub" style="margin-bottom:16px">
+      Your device registration has been received. An administrator will authorize your access shortly.
+    </div>
+    <div class="waiting-info">
+      <div class="row"><span class="label">Status</span><span class="value" style="color:#FFA500">Pending Review</span></div>
+      <div class="row"><span class="label">User</span><span class="value" id="waitName">-</span></div>
+      <div class="row"><span class="label">Email</span><span class="value" id="waitEmail">-</span></div>
+      <div class="row"><span class="label">Hardware ID</span><span class="value" style="font-size:10px;font-family:monospace;cursor:pointer;" id="waitHwid" onclick="copyWaitHwid()" title="Click to copy">-</span></div>
+    </div>
+    <div class="tiny-text">This screen updates automatically when approved by the administrator.</div>
+  </div>
+
+  <!-- APPROVED HUD -->
+  <div class="step" id="stepApproved">
+    <div class="approved-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00FF9D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="step-title" style="font-size:22px">Access Granted</div>
+    <div class="step-sub" style="margin-bottom:16px">
+      Welcome to Akki Ai. Device authorization verified.<br>The application is opening now.
+    </div>
+    <div class="waiting-info" style="margin-bottom:20px">
+      <div class="row"><span class="label">Status</span><span class="value" style="color:#00FF9D">Authorized Active</span></div>
+    </div>
+    <button class="btn-white" onclick="handleLaunch()">CONTINUE</button>
+  </div>
+
+</div>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────────────
+let userName = ''
+let userAge = ''
+let currentUser = null
+let currentStep = 1
+let approvalUnsub = null
+let onboardingMode = 'full'
+
+// ─── NAVIGATION ──────────────────────────────────────────────────
+
+function goToStep(step) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'))
+  const el = document.getElementById('step' + step)
+  if (el) el.classList.add('active')
+  currentStep = step
+  document.getElementById('stageCounter').textContent = 'STAGE ' + step + '/4'
+  document.getElementById('backBtn').style.display = step === 1 ? 'none' : 'inline-block'
+  hideError('step' + step)
+}
+
+function showError(prefix, msg) {
+  const el = document.getElementById('error-' + prefix)
+  if (el) { el.textContent = msg; el.classList.add('visible') }
+}
+
+function hideError(prefix) {
+  const el = document.getElementById('error-' + prefix)
+  if (el) el.classList.remove('visible')
+}
+
+function handleBack() {
+  if (currentStep === 2) goToStep(1)
+  else if (currentStep === 3) goToStep(2)
+  else if (currentStep === 4) goToStep(3)
+}
+
+// ─── STEP 1: Name ───────────────────────────────────────────────
+
+function handleStep1() {
+  const name = document.getElementById('inputName').value.trim()
+  if (!name) { showError('step1', 'Please enter your name.'); return }
+  hideError('step1')
+  userName = name
+  window.onboardingAPI.saveName(name)
+  goToStep(2)
+  setTimeout(() => document.getElementById('inputAge').focus(), 100)
+}
+
+document.getElementById('inputName').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleStep1()
+})
+
+// ─── STEP 2: Age ────────────────────────────────────────────────
+
+function handleStep2() {
+  const age = document.getElementById('inputAge').value.trim()
+  if (!age || isNaN(age) || parseInt(age) < 1) { showError('step2', 'Please enter a valid age.'); return }
+  hideError('step2')
+  userAge = age
+  window.onboardingAPI.saveAge(age)
+  goToStep(3)
+}
+
+document.getElementById('inputAge').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleStep2()
+})
+
+// ─── STEP 3: Google Sign-In ────────────────────────────────────
+
+async function handleStep3() {
+  const btn = document.getElementById('btnGoogle')
+  btn.disabled = true; btn.innerHTML = 'Connecting to Google...'
+  hideError('step3')
+
+  try {
+    const result = await window.onboardingAPI.signIn()
+    if (result && result.success) {
+      currentUser = result.user
+      if (result.status === 'approved') {
+        playApprovalChime()
+        showApproved({ plan: 'pro' })
+        setTimeout(() => {
+          window.onboardingAPI.onboardingComplete()
+        }, 1200)
+      } else {
+        // Pending authorization by admin
+        showWaitingHUD(result.user, result.hwid)
+      }
+    } else {
+      showError('step3', result?.error || 'Authentication could not be completed.')
+    }
+  } catch (e) {
+    showError('step3', e.message || 'Sign in failed')
+  }
+
+  btn.disabled = false
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.52-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.54 28.59A14.5 14.5 0 019.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 000 24c0 3.77.87 7.35 2.56 10.56l7.98-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg> CONTINUE WITH GOOGLE`
+}
+
+
+
+function handleSignOut() {
+  window.onboardingAPI.signOut().then(() => {
+    currentUser = null
+    document.getElementById('inputName').value = ''
+    document.getElementById('inputAge').value = ''
+    goToStep(1)
+  }).catch(() => {
+    currentUser = null
+    goToStep(1)
+  })
+}
+
+// ─── REAL-TIME POLLING & CHIME ───────────────────────────────────
+
+let pollInterval = null
+
+function showWaitingHUD(user, hwid) {
+  goToStep('Waiting')
+  document.getElementById('waitName').textContent = user?.displayName || user?.name || 'Registered User'
+  document.getElementById('waitEmail').textContent = user?.email || '-'
+  document.getElementById('waitHwid').textContent = hwid || '-'
+
+  startPollingApproval(user?.email, hwid)
+}
+
+function startPollingApproval(email, hwid) {
+  if (pollInterval) clearInterval(pollInterval)
+  if (!email || !hwid) return
+
+  const checkStatus = async () => {
+    try {
+      const url = `https://imakshay.in/akkiai/api/check_status.php?email=${encodeURIComponent(email)}&hwid=${encodeURIComponent(hwid)}`
+      const res = await fetch(url)
+      const data = await res.json()
+      if (data && data.status === 'approved') {
+        clearInterval(pollInterval)
+        pollInterval = null
+        playApprovalChime()
+        showApproved({ plan: 'pro' })
+        setTimeout(() => {
+          window.onboardingAPI.onboardingComplete()
+        }, 1200)
+      } else if (data && data.status === 'blocked') {
+        clearInterval(pollInterval)
+        pollInterval = null
+        showError('stepWaiting', 'Access denied: Device has been blocked by administrator.')
+      }
+    } catch (e) {
+      console.warn('Status poll warning:', e.message)
+    }
+  }
+
+  checkStatus()
+  pollInterval = setInterval(checkStatus, 3000)
+}
+
+function copyWaitHwid() {
+  const hwid = document.getElementById('waitHwid').textContent
+  if (hwid && hwid !== '-') {
+    navigator.clipboard.writeText(hwid)
+  }
+}
+
+function playApprovalChime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    osc1.type = 'sine'
+    osc2.type = 'triangle'
+
+    osc1.frequency.setValueAtTime(523.25, ctx.currentTime) // C5
+    osc1.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.25) // C6
+    
+    osc2.frequency.setValueAtTime(659.25, ctx.currentTime) // E5
+    osc2.frequency.exponentialRampToValueAtTime(1318.51, ctx.currentTime + 0.25) // E6
+
+    gain.gain.setValueAtTime(0.15, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7)
+
+    osc1.connect(gain)
+    osc2.connect(gain)
+    gain.connect(ctx.destination)
+
+    osc1.start()
+    osc2.start()
+    osc1.stop(ctx.currentTime + 0.7)
+    osc2.stop(ctx.currentTime + 0.7)
+  } catch (e) {}
+}
+
+// ─── APPROVAL ───────────────────────────────────────────────────
+
+function startApprovalListener() {
+  approvalUnsub = window.onboardingAPI.onLicenseStatusChange((status) => {
+    if (status.status === 'approved') {
+      showApproved(status)
+    }
+  })
+  window.onboardingAPI.onLicenseApproved(() => {
+    window.onboardingAPI.getLicenseStatus().then(showApproved)
+  })
+}
+
+function showApproved(status) {
+  if (approvalUnsub) { approvalUnsub(); approvalUnsub = null }
+  goToStep('Approved')
+}
+
+function handleLaunch() {
+  window.onboardingAPI.onboardingComplete()
+}
+
+// ─── AUTH LISTENER ──────────────────────────────────────────────
+
+let authUnsub = null
+
+function setupAuthListener() {
+  authUnsub = window.onboardingAPI.onAuthStateChanged((user) => {
+    if (user) {
+      currentUser = user
+    }
+  })
+}
+
+// ─── INIT ───────────────────────────────────────────────────────
+
+async function init() {
+  setupAuthListener()
+
+  try {
+    onboardingMode = await window.onboardingAPI.getOnboardingMode()
+
+    const authStatus = await window.onboardingAPI.getAuthStatus()
+    const lic = await window.onboardingAPI.getLicenseStatus()
+
+    // If authenticated AND license is approved, proceed to launch
+    if (authStatus && authStatus.authenticated && authStatus.user && lic && lic.status === 'approved') {
+      showApproved(lic)
+      setTimeout(() => {
+        window.onboardingAPI.onboardingComplete()
+      }, 500)
+      return
+    }
+
+    // If device registration is pending, show waiting HUD
+    if (lic && lic.status === 'pending') {
+      const hwid = await window.onboardingAPI.getHardwareId()
+      showWaitingHUD({ email: lic.email }, hwid)
+      return
+    }
+
+    // Otherwise, user is signed out or new: show Google Sign In screen directly
+    goToStep(3)
+    document.getElementById('backBtn').style.display = 'none'
+    return
+  } catch (e) {
+    console.error('Init error:', e)
+  }
+
+  goToStep(3)
+  document.getElementById('backBtn').style.display = 'none'
+}
+
+document.addEventListener('DOMContentLoaded', init)
+</script>
+</body>
+</html>

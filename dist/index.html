@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    try { localStorage.setItem('akki_onboarding_seen', 'true'); localStorage.setItem('akki_onboarding_seen', 'true'); } catch(e){}
+    (function() {
+      var map = {
+        'stonic_active_chat_id': 'akki_active_chat_id',
+        'stonic_active_hermes_chat_id': 'akki_active_hermes_chat_id',
+        'stonic_active_voice_chat_id': 'akki_active_voice_chat_id',
+        'stonic_chat_mode': 'akki_chat_mode',
+        'stonic_child_agent_model': 'akki_child_agent_model',
+        'stonic_guide_video_seen': 'akki_guide_video_seen',
+        'stonic_main_assistant_model': 'akki_main_assistant_model',
+        'stonic_onboarding_age': 'akki_onboarding_age',
+        'stonic_onboarding_name': 'akki_onboarding_name',
+        'stonic_onboarding_seen': 'akki_onboarding_seen',
+        'STONIC_SOUL_FEMALE_CUSTOM_TEXT': 'AKKI_SOUL_FEMALE_CUSTOM_TEXT',
+        'STONIC_SOUL_MALE_CUSTOM_TEXT': 'AKKI_SOUL_MALE_CUSTOM_TEXT',
+        'STONIC_SOUL_FEMALE_TEMPLATE_ID': 'AKKI_SOUL_FEMALE_TEMPLATE_ID',
+        'STONIC_SOUL_MALE_TEMPLATE_ID': 'AKKI_SOUL_MALE_TEMPLATE_ID',
+        'STONIC_SOUL_FEMALE_CUSTOM_ACTIVE': 'AKKI_SOUL_FEMALE_CUSTOM_ACTIVE',
+        'STONIC_SOUL_MALE_CUSTOM_ACTIVE': 'AKKI_SOUL_MALE_CUSTOM_ACTIVE'
+      };
+      try {
+        for (var k in map) {
+          if (map.hasOwnProperty(k)) {
+            try {
+              if (localStorage.getItem(map[k]) === null && localStorage.getItem(k) !== null) {
+                localStorage.setItem(map[k], localStorage.getItem(k));
+              }
+              localStorage.removeItem(k);
+            } catch (e) {}
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Akki Desktop</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        /* ── thgus is background and its wokirng very ell i thin its goo i think also udnusma ── */
+        background: '#0a0d14',
+        mainBkg: '#0d1117',
+        secondaryColor: '#111827',
+        tertiaryColor: '#161b22',
+        clusterBkg: '#111827',
+        edgeLabelBackground: '#0d1117',
+
+        /* ── Borders ── */
+        primaryBorderColor: '#00e5ff33',
+        secondaryBorderColor: '#1e293b',
+        tertiaryBorderColor: '#1e293b',
+        nodeBorder: '#00e5ff33',
+        clusterBorder: '#1e293b',
+
+        /* ── Node fills (primary = default node) ── */
+        primaryColor: '#0d1117',
+
+        /* ── Text — always light so it's readable ── */
+        primaryTextColor: '#e2e8f0',
+        secondaryTextColor: '#94a3b8',
+        tertiaryTextColor: '#e2e8f0',
+        lineColor: '#00e5ff70',
+        titleColor: '#00e5ff',
+
+        /* ── Font ── */
+        fontFamily: 'Inter, ui-sans-serif, sans-serif',
+        fontSize: '13px',
+
+        /* ── Pie / sequence specific ── */
+        pie1: '#00e5ff22', pie2: '#3b82f622', pie3: '#8b5cf622',
+        pie4: '#10b98122', pie5: '#f59e0b22', pie6: '#ef444422',
+        pie7: '#06b6d422', pie8: '#a855f722',
+        pieLegendTextColor: '#e2e8f0',
+        pieSectionTextColor: '#e2e8f0',
+
+        /* ── Sequence diagram ── */
+        actorBkg: '#0d1117',
+        actorBorder: '#00e5ff33',
+        actorTextColor: '#e2e8f0',
+        actorLineColor: '#1e293b',
+        signalColor: '#00e5ff70',
+        signalTextColor: '#e2e8f0',
+        labelBoxBkgColor: '#0d1117',
+        labelBoxBorderColor: '#1e293b',
+        labelTextColor: '#e2e8f0',
+        loopTextColor: '#94a3b8',
+        noteBorderColor: '#1e293b',
+        noteBkgColor: '#111827',
+        noteTextColor: '#e2e8f0',
+        activationBorderColor: '#00e5ff44',
+        activationBkgColor: '#111827',
+
+        /* ── Gantt ── */
+        gridColor: '#1e293b',
+        section0: '#0d1117',
+        section1: '#111827',
+        taskBorderColor: '#00e5ff33',
+        taskBkgColor: '#111827',
+        taskTextColor: '#e2e8f0',
+        taskTextDarkColor: '#e2e8f0',
+        taskTextLightColor: '#94a3b8',
+        taskTextOutsideColor: '#94a3b8',
+        activeTaskBorderColor: '#00e5ff55',
+        activeTaskBkgColor: '#0d1117',
+        doneTaskBkgColor: '#1e293b',
+        doneTaskBorderColor: '#334155',
+        critBorderColor: '#ef4444aa',
+        critBkgColor: '#1c0a0a',
+        todayLineColor: '#00e5ff',
+
+        /* ── Class diagram ── */
+        classText: '#e2e8f0',
+
+        /* ── Git graph ── */
+        git0: '#00e5ff', git1: '#3b82f6', git2: '#8b5cf6',
+        git3: '#10b981', git4: '#f59e0b', git5: '#ef4444',
+        git6: '#06b6d4', git7: '#a855f7',
+        gitBranchLabel0: '#e2e8f0', gitBranchLabel1: '#e2e8f0',
+        gitBranchLabel2: '#e2e8f0', gitBranchLabel3: '#e2e8f0',
+        gitInv0: '#0d1117', gitInv1: '#0d1117',
+      }
+    });
+  </script>
+  <script src="./assets/nexus-avatar-engine.js"></script>
+  <script type="module" crossorigin src="./assets/index-pSpzB4bE.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-JJRAnnQN.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    console.log('[Renderer] inline startup script executing');
+
+    const notifyAppReady = () => {
+      console.log('[Renderer] notifyAppReady() attempt, electronAPI=', !!window.electronAPI, 'notifyAppReady=', window.electronAPI && typeof window.electronAPI.notifyAppReady === 'function');
+      if (window.electronAPI && typeof window.electronAPI.notifyAppReady === 'function') {
+        try {
+          window.electronAPI.notifyAppReady().then(() => {
+            console.log('[Renderer] electronAPI.notifyAppReady() resolved');
+          }).catch((error) => {
+            console.warn('[Renderer] electronAPI.notifyAppReady() rejected:', error);
+          });
+        } catch (error) {
+          console.error('[Renderer] electronAPI.notifyAppReady() thrown:', error);
+        }
+        return true;
+      }
+      return false;
+    };
+
+    if (!notifyAppReady()) {
+      console.log('[Renderer] electronAPI not available yet; attaching DOM events');
+      window.addEventListener('DOMContentLoaded', notifyAppReady);
+      window.addEventListener('load', notifyAppReady);
+      setTimeout(() => {
+        console.log('[Renderer] timeout fallback calling notifyAppReady()');
+        notifyAppReady();
+      }, 2000);
+    }
+  </script>
+</body>
+
+</html>
